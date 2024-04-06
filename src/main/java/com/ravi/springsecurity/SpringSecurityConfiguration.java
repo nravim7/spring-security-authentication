@@ -1,17 +1,15 @@
 package com.ravi.springsecurity;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.User;
+
 
 import javax.sql.DataSource;
 
-import static javax.management.Query.and;
 
 @EnableWebSecurity
 public class SpringSecurityConfiguration extends WebSecurityConfiguration {
@@ -22,7 +20,18 @@ public class SpringSecurityConfiguration extends WebSecurityConfiguration {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
         auth.jdbcAuthentication()
-                .dataSource(dataSource);
+                .dataSource(dataSource)
+                .withDefaultSchema()
+                .withUser(
+                        User.withUsername("user")
+                                .password("pass")
+                                .roles("USER")
+                )
+                .withUser(
+                        User.withUsername("admin")
+                                .password("pass")
+                                .roles("ADMIN")
+                );
     }
 
 
